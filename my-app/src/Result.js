@@ -58,46 +58,57 @@ const useStyles = makeStyles((theme) => ({
 
 const tiers = [
     {
-        title: "초급자",
-        description: "평균 3점 미만",
-        buttonText: "보충자료 다운로드",
+        title: "정답/해설",
+        description: "정답 및 해설 보러가기",
+        buttonText: "정답/해설 다운로드",
         docLink: "doc/beginner.pdf",
         buttonVariant: "outlined",
+        
     },
-    {
-        title: "중급자",
-        description: "평균 3 ~ 4점",
-        buttonText: "보충자료 다운로드",
-        docLink: "doc/intermediate.pdf",
-        buttonVariant: "outlined",
-    },
-    {
-        title: "고급자",
-        description: "평균 4점 초과",
-        buttonText: "보충자료 다운로드",
-        docLink: "doc/advanced.pdf",
-        buttonVariant: "outlined",
-    },
-];
+    // {
+    //     title: "중급자",
+    //     description: "평균 3 ~ 4점",
+    //     buttonText: "보충자료 다운로드",
+    //     docLink: "doc/intermediate.pdf",
+    //     buttonVariant: "outlined",
+    // },
+    // {
+    //     title: "고급자",
+    //     description: "평균 4점 초과",
+    //     buttonText: "보충자료 다운로드",
+    //     docLink: "doc/advanced.pdf",
+    //     buttonVariant: "outlined",
+    // },
+]
 
 export default function Result(props) {
     const classes = useStyles();
-    let level = "초급";
-    if (props.result > 4) {
-        tiers[2].buttonVariant = "contained";
-        level = "고급";
-    } else if (props.result >= 3) {
-        tiers[1].buttonVariant = "contained";
-        level = "중급";
-    } else if (props.result < 3) {
-        tiers[0].buttonVariant = "contained";
-        level = "초급";
+    // let total = props.result.length;
+    let total = props.result;
+    let check = "얏호";
+    if (props.result >= 2) {
+        total = "2개";
     }
+    // if (props.result.length === 1) {
+    //     total = "2개";
+    // }
+    
+        // } else if (props.result >= 3) {
+    //     total = "레벨2";
+    // } else if (props.result < 3) {
+    //     total = "레벨3";
+    // }
 // export default function Result(props) {
 //     const classes = useStyles();
-//     let level = "초급";
-//     if (props.result > 4) 
-       
+    
+//     // let total = "총 문제수";
+//     let total = "result.total_cnt";
+//     let check = "맞은 문제수";
+//     let level = "레벨";
+//     if (props.result > 1) {
+//         level = "454654646546";
+//     }
+    
     return (
         <React.Fragment>
             <CssBaseline />
@@ -131,14 +142,15 @@ export default function Result(props) {
             {/* Hero unit */}
             <Container maxWidth="sm" component="main" className={classes.heroContent}>
                 <Typography component="h2" variant="h2" align="center" color="textPrimary" gutterBottom>
-                    모의고사 결과
+                    모의고사 채점 결과
                 </Typography>
-                <Typography variant="h4" align="center" color="textSecondary" component="p" gutterBottom>
-                    당신의 역량은 {level} 입니다.
-                    {/* 당신의 점수는 "" 입니다. */}
+                <br></br>
+                <Typography variant="h3" align="center" color="textSecondary" component="p" gutterBottom>
+                    {/* 당신의 역량은 {level} 입니다. */}
+                     {check} / {total}
                 </Typography>
                 <Typography variant="h5" align="center" color="textSecondary" component="p">
-                    <a href="">정답/해설 보러가기</a>
+                   ---점수가 들어갈 공간---
                 </Typography>
             </Container>
             {/* End hero unit */}
@@ -158,7 +170,7 @@ export default function Result(props) {
                                 />
                                 <CardContent>
                                     <div className={classes.cardPricing}>
-                                        <Typography component="p" variant="h5" color="textPrimary">
+                                        <Typography component="p" variant="h5" color="textPrimary" >
                                             {tier.description}
                                         </Typography>
                                     </div>
@@ -182,3 +194,4 @@ export default function Result(props) {
         </React.Fragment>
     );
 }
+

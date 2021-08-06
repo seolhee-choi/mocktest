@@ -23,6 +23,7 @@ class App extends React.Component {
     this.result = survey.data;
   }
 
+  //DB(test.php)를 받아와서 문제페이지 출력
   componentDidMount() {
     fetch("http://localhost:8080/test.php")
       .then(res => res.json())
@@ -31,7 +32,7 @@ class App extends React.Component {
           isLoaded: true,
           json: result[0]
         });
-        console.log(result);
+       // console.log(result);
       },
         (error) => {
           this.setState({
@@ -45,7 +46,6 @@ class App extends React.Component {
 
   render() {
     const { error, isLoaded, json } = this.state;
-
     var surveyRender = !this.state.isCompleted && this.state.isLoaded ? (
       <Survey.Survey
         json={json}
@@ -71,52 +71,95 @@ class App extends React.Component {
         return (
           <div className="App">
               {surveyRender}
-              {/* {pages.map(item => (
-                <li key={item.id}>
-                  {item.title}
-                </li>
-              ))} */}
               {onSurveyCompletion}
           </div>
         );
       }
     } 
 }  
-   
+
+
+
+//결과페이지(result.php) 출력
+
 class CompletePage extends React.Component {
-  
-      render() {
-        let quizResult = this.props.result;
-        let quizSum = 0;
-        //let quizTotal = 0;
-        let quizAverage = 0;
-        console.log(quizResult);
-        
-        for (var k in quizResult["id"]) {
-              if (quizResult["id"].hasOwnProperty(k)) {
-                  quizSum += parseInt(quizResult["id"][k]);
-              }
-          }
-        quizAverage = quizSum / Object.keys(quizResult["id"]).length;
-        return (
-          <div>
-            <Result result={quizAverage} />
-            
-          </div>
-        )
+  render() {
+    let quizResult = [];
+    let data1 = [];
+    quizResult = this.props.result;
+    // console.log("result",this.props.result);
+    fetch('http://localhost:8080/result.php', {
+      method: 'POST',
+      headers: {
+        //'Access-Control-Allow-Origin' : '*',
+        //'Accept': 'application/json',
+        'Content-Type': 'application/json',
+      },
+      body : JSON.stringify(quizResult)
+    })
+    .then(response => response.json())
+    .then(data => { 
+      data1 = data;
+      console.log("Success: ", data);
+    })   
+    .catch(error => { 
+      console.log('Error:', error); 
+    });
+/*
+    for (const key in quizResult) {
+      if (quizResult.hasOwnProperty(key)) {
+        const value = quizResult[key];
+        console.log("선택값 : ", value);
       }
     }
-    
-    
-    
-      // <div>Thanks for completing the survey :)
-        
-      // </div>) : null;
-
-    
-  
-  
-
+*/    
+    return (
+      <div >
+          <Result result={data1}/>
+      </div>
+    )
+   }
+  }
 
 
 export default App;
+
+    //여기서부터 진짜
+    // let quizResult = [];
+    // quizResult['result'] = this.props.result;
+    // let data1 = [];
+    // //console.log(quizResult);
+
+    // fetch('http://localhost:8080/result.php', {
+    //   method: 'POST',
+    //   headers: {
+    //     // 'Access-Control-Allow-Origin' : '*',
+    //     // 'Accept': 'application/json',
+    //     'Content-Type': 'application/json'},
+    //   body : JSON.stringify(data1),
+    // })
+    // .then((res) => {
+    //   res.json();
+    // })
+    
+    // .then((data) => { 
+    //   data1=data;
+    //     //console.log("Success: ", data); 
+    //     // console.log("Success: ", data1); 
+    //     console.log("Success: ", quizResult); 
+    //     //console.log("Success: ", quizResult['result']); 
+    // })
+   
+    // .catch((error) => { 
+    //   console.error('Error:', error); 
+    // });
+
+
+    // data1 = Object.values(quizResult);
+    // quizSum= Object.keys(quizResult).length;
+    // console.log(data1);
+    // console.log(quizResult);
+
+   
+   
+   
