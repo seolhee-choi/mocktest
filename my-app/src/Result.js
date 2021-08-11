@@ -11,6 +11,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import Container from "@material-ui/core/Container";
+import { keys } from "@material-ui/core/styles/createBreakpoints";
 
 const useStyles = makeStyles((theme) => ({
     "@global": {
@@ -64,52 +65,54 @@ const tiers = [
         docLink: "doc/beginner.pdf",
         buttonVariant: "outlined",
         
-    },
-    // {
-    //     title: "중급자",
-    //     description: "평균 3 ~ 4점",
-    //     buttonText: "보충자료 다운로드",
-    //     docLink: "doc/intermediate.pdf",
-    //     buttonVariant: "outlined",
-    // },
-    // {
-    //     title: "고급자",
-    //     description: "평균 4점 초과",
-    //     buttonText: "보충자료 다운로드",
-    //     docLink: "doc/advanced.pdf",
-    //     buttonVariant: "outlined",
-    // },
+    }
 ]
 
 export default function Result(props) {
     const classes = useStyles();
-    // let total = props.result.length;
-    let total = props.result;
-    let check = "얏호";
-    if (props.result >= 2) {
-        total = "2개";
+    let result = props.result;
+    let quizCheck = props.quizCheck;
+    let total_count = Object.keys(result).length;//총 문제갯수
+
+    const test = () => {//총 문제를 반환하는
+        return (
+            <div>
+                {Object.keys(result).map((obj, i) => <div key={i}>{result[obj]}</div>)}
+            </div>
+        )
     }
-    // if (props.result.length === 1) {
-    //     total = "2개";
-    // }
     
-        // } else if (props.result >= 3) {
-    //     total = "레벨2";
-    // } else if (props.result < 3) {
-    //     total = "레벨3";
-    // }
-// export default function Result(props) {
-//     const classes = useStyles();
+    const test2 = () => {//맞춘 문제의 values값만
+        return (
+            <div>
+                {Object.values(quizCheck).map((obj, i) => <div values={i}>{quizCheck[obj]}</div>)}
+                {/* <div >제가 좋아하는 숫자는 {props.quizCheck}</div> */}
+            </div>
+        )
+    }
+ 
+    const arr = quizCheck;
+    var right_answer = [];
+
+    Object.values(quizCheck).forEach(element => {
+        if(element == 1) {
+            right_answer.push(element);
+        }
+    });
+        console.log("right_answer : ",right_answer);
     
-//     // let total = "총 문제수";
-//     let total = "result.total_cnt";
-//     let check = "맞은 문제수";
-//     let level = "레벨";
-//     if (props.result > 1) {
-//         level = "454654646546";
-//     }
-    
+
     return (
+    //    <React.Fragment>
+    //       맞힌 문제 수 : &nbsp;
+    //       {/* {test()} */}
+    //       {right_answer.length}
+    //       <br></br>
+    //       총 문제 수 : &nbsp;
+    //       {/* {test2()} */}
+    //       {total_count}
+    //    </React.Fragment>
+       
         <React.Fragment>
             <CssBaseline />
             <AppBar position="static" color="default" elevation={0} className={classes.appBar}>
@@ -139,24 +142,25 @@ export default function Result(props) {
                     </Button>
                 </Toolbar>
             </AppBar>
-            {/* Hero unit */}
+
             <Container maxWidth="sm" component="main" className={classes.heroContent}>
                 <Typography component="h2" variant="h2" align="center" color="textPrimary" gutterBottom>
                     모의고사 채점 결과
                 </Typography>
                 <br></br>
-                <Typography variant="h3" align="center" color="textSecondary" component="p" gutterBottom>
-                    {/* 당신의 역량은 {level} 입니다. */}
-                     {check} / {total}
+                <Typography variant="h4" align="center" color="textSecondary" component="p" gutterBottom>
+                    맞은 문제 수 / 총 문제 수 <br></br>
+                    <br></br>
+                    {right_answer.length} /  {total_count}
                 </Typography>
                 <Typography variant="h5" align="center" color="textSecondary" component="p">
-                   ---점수가 들어갈 공간---
+                   ---점수가 들어갈 공간---(추가여부 확인)
                 </Typography>
             </Container>
-            {/* End hero unit */}
+
             <Container maxWidth="md" component="main">
                 <Grid container spacing={5} alignItems="flex-end">
-                    {tiers.map((tier) => (
+                    {tiers.map((tier) => (//justify-content: center;로 정렬
                         // Enterprise card is full width at sm breakpoint
                         <Grid item key={tier.title} xs={12} sm={tier.title === "Enterprise" ? 12 : 6} md={4}>
                             <Card>
@@ -192,6 +196,7 @@ export default function Result(props) {
                 </Grid>
             </Container>
         </React.Fragment>
+        
     );
 }
 

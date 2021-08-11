@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useEffect } from 'react';
 import './App.css';
 import "survey-react/survey.css"
 import * as Survey from "survey-react";
@@ -10,7 +10,6 @@ class App extends React.Component {
     this.state = {
       error: null,
       isLoaded: false,
-      items : []
     };
     this.result = "";
     this.onCompleteComponent = this.onCompleteComponent.bind(this)
@@ -75,91 +74,54 @@ class App extends React.Component {
           </div>
         );
       }
+   
     } 
 }  
 
-
-
 //결과페이지(result.php) 출력
 
-class CompletePage extends React.Component {
-  render() {
-    let quizResult = [];
-    let data1 = [];
-    quizResult = this.props.result;
-    // console.log("result",this.props.result);
-    fetch('http://localhost:8080/result.php', {
-      method: 'POST',
-      headers: {
-        //'Access-Control-Allow-Origin' : '*',
-        //'Accept': 'application/json',
-        'Content-Type': 'application/json',
-      },
-      body : JSON.stringify(quizResult)
-    })
-    .then(response => response.json())
-    .then(data => { 
-      data1 = data;
-      console.log("Success: ", data);
-    })   
-    .catch(error => { 
-      console.log('Error:', error); 
-    });
-/*
-    for (const key in quizResult) {
-      if (quizResult.hasOwnProperty(key)) {
-        const value = quizResult[key];
-        console.log("선택값 : ", value);
-      }
-    }
-*/    
+const CompletePage = (props) => {
+  const [obj, setObj] = useState([])
+  let [quizResult] = useState([])
+    // let quizResult = [];
+    //let data1 = [];
+    quizResult = props.result;
+    //console.log("quizResult : ",quizResult);
+    useEffect(() => {
+      fetch('http://localhost:8080/result.php', {
+        method: 'POST',
+        headers: {
+          //'Access-Control-Allow-Origin' : '*',
+          // 'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body : JSON.stringify(quizResult)
+      })
+      .then(response => response.json())
+      .then(data => { //result.php로부터 받아온 값
+        return setObj(data);
+      })   
+      .catch(error => { 
+        console.log('Error:', error); 
+      });
+      
+    },[])
+    console.log("Success: ", obj);
+    
+    // console.log(data1);
+      
     return (
       <div >
-          <Result result={data1}/>
+        <Result 
+          result={quizResult}
+          quizCheck={obj}
+        />
       </div>
     )
-   }
-  }
+}
 
 
 export default App;
 
-    //여기서부터 진짜
-    // let quizResult = [];
-    // quizResult['result'] = this.props.result;
-    // let data1 = [];
-    // //console.log(quizResult);
-
-    // fetch('http://localhost:8080/result.php', {
-    //   method: 'POST',
-    //   headers: {
-    //     // 'Access-Control-Allow-Origin' : '*',
-    //     // 'Accept': 'application/json',
-    //     'Content-Type': 'application/json'},
-    //   body : JSON.stringify(data1),
-    // })
-    // .then((res) => {
-    //   res.json();
-    // })
-    
-    // .then((data) => { 
-    //   data1=data;
-    //     //console.log("Success: ", data); 
-    //     // console.log("Success: ", data1); 
-    //     console.log("Success: ", quizResult); 
-    //     //console.log("Success: ", quizResult['result']); 
-    // })
-   
-    // .catch((error) => { 
-    //   console.error('Error:', error); 
-    // });
-
-
-    // data1 = Object.values(quizResult);
-    // quizSum= Object.keys(quizResult).length;
-    // console.log(data1);
-    // console.log(quizResult);
-
-   
    
    
